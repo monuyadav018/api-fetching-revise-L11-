@@ -1,42 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { fetchPosts } from "./api";
-import {Card} from "react-bootstrap";
+import { fetchPost } from "./api";
+import RandomUser from "./RandomUsers/Random";
+import { Button } from "react-bootstrap";
+
 
 function App() {
-  const [posts, setPosts] = useState([]);
+  const [userData, setUserData] = useState(null);
+  // const [val, setVal] = useState(null);
 
-  useEffect(() => {
-    async function loadData() {
-      const data = await fetchPosts();
-      setPosts(data);
-      console.log("data fetched",data);
-    }
+  // useEffect(() => {
+  //   async function loadData() {
+  //     const data = await fetchPost();
+  //     setUserData(data.results[0]);
+  //   }
+  //   loadData();
+  // }, []);
+  useEffect(()=>{
+    fetchPost().then((user)=> setUserData(user.results[0]));
+  },[]);
+  const refresh =()=>{
+     fetchPost().then((user) => setUserData(user.results[0]));
 
-    loadData();
-  }, []);
-
+  }
   return (
-    <div>
-      <h1>Api Fetching </h1>
-      {posts.map((post) => (
-        <Card
-          key={post.id}
-          style={{
-            width: "18rem",
-            display: "inline-block",
-            margin: "4px",
-            maxHeight: "300px",
-           maxWidth:'250px'
-           
-          }}
-        >
-          <Card.Body>
-            <Card.Title style={{ fontWeight: "bolder",color:"goldenrod" }}>{post.title}</Card.Title>
-
-            <Card.Text style={{color:'burlywood'}}>{post.body}</Card.Text>
-          </Card.Body>
-        </Card>
-      ))}
+    <div className="grid-page">
+      <h1>RandomUser ...</h1>
+      {/* "data" is prop here */}
+      {userData && <RandomUser newData={userData} />}
+      <Button onClick={refresh}  style={{margin:'10px'}}>Refresh User</Button>
     </div>
   );
 }
